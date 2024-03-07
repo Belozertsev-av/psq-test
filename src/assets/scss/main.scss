@@ -1,0 +1,40 @@
+@import "./nullstyle.scss";
+@import "./_variables";
+
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    @include adaptive-value('font-size', $textSizeStart, $textSizeEnd, 0);
+}
+#app {
+    width: 100%;
+    height: 100%;
+}
+.wrapper{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    // overflow: hidden;
+}
+.title {
+    @include adaptive-value('font-size', $titleSizeStart, $titleSizeEnd, 0);
+    font-weight: 700;
+}
+
+.subtitle {
+    @include adaptive-value('font-size', $subtitleSizeStart, $subtitleSizeEnd, 0);
+}
+.link {
+    color: $fontSecondaryColor;
+    cursor: pointer;
+}
+.btn {
+    cursor: pointer;
+    padding: $padding $paddingMedium;
+    border-radius: $radius;
+    background-color: $primaryColor;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+}
