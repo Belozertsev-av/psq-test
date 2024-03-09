@@ -21,7 +21,7 @@ const storeData = useVariantStore()
     border-top-right-radius: $radius;
     border-top-left-radius: $radius;
     height: 70px;
-    background-color: $primaryColor;
+    background-color: $backgroundPrimaryColor;
   }
 }
 </style>

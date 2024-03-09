@@ -4,7 +4,7 @@
             <div class="results__navbar">
                 <div class="navbar__list">
                     <router-link to="/" class="navbar__item">Ген. варианты</router-link>
-                    <router-link to="/others" class="navbar__item">Остальное</router-link>
+                    <router-link to="/others" class="navbar__item">Дргуая вкладка</router-link>
                 </div>
                 <div class="navbar__meta">
                     <ps-meta></ps-meta>
@@ -27,7 +27,6 @@ import psMeta from '../components/psMeta.vue';
 .results {
     display: flex;
     flex-direction: column;
-    flex: 1 1 auto;
     width: 100%;
     height: 100%;
 
@@ -41,11 +40,6 @@ import psMeta from '../components/psMeta.vue';
         display: flex;
         justify-content: space-between;
         align-items: center;
-    }
-
-    &__main-window {
-        display: flex;
-        flex-direction: column;
     }
 }
 
@@ -66,8 +60,8 @@ import psMeta from '../components/psMeta.vue';
 }
 
 .router-link-active {
-    background-color: $primaryColor;
-    color: #fff;
+    background-color: $backgroundPrimaryColor;
+    font-weight: 700;
     text-decoration: none;
 }
 

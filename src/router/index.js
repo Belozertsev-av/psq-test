@@ -1,5 +1,5 @@
-import psVariants from "../views/psVariants.vue";
-import psOthers from "../views/psOthers.vue";
+import psVariants from "../pages/psVariants.vue";
+import psOthers from "../pages/psOthers.vue";
 import { createWebHistory, createRouter } from "vue-router";
 
 const routes = [

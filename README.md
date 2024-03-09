@@ -15,22 +15,29 @@ Vue3 (желательно Composition API), JS/TS. По возможности 
 
 ```
     { "leftAnchorContig" : "chr7", -- Хромосома на которой находится вариант
-    "leftAnchorPosition" : 117120148, -- Левая координата варианта на
-    хромосоме "rightAnchorPosition" : 117120150, -- Правая координата
-    варианта на хромосоме "alleleSequence" : "G", -- Последовательность
-    варианта (то, что нашли у пациента) "referenceSequence" : "A", --
-    Последовательность в референсном геноме "alleleName" : "M1V", -- Имя, под
-    которым этот генетический вариант известен генетикам "hgvs" : { -- Запись
-    варианта в 3 формах номенклатуры HGVS "g": "g.117120149A>G", "c":
-    "c.123A>G", "p": "p.123Ter" }, "genotype" : "HETEROZYGOTE", -- Генотип
-    варианта "significance" : "PATHOGENIC", -- Значимость варианта, может ли
-    он привести к развитию заболевания "externalSourceEntries" : [{ -- Записи
-    о варианте во внешних источниках "id" : "c.1A>G", "link" : null,
-    "database" : { "name" : "CFTR-France", "version" : "26.01.2018",
-    "category" : "LOCUS SPECIFIC" }, "significance" : "UNKNOWN" }, { "id" :
-    "53423", "link" :
-    "https://preview.ncbi.nlm.nih.gov/clinvar/variation/53423", "database" :
-    { "name" : "Clinvar", "version" : "02.10.2017", "category" : "COMMON" },
+    "leftAnchorPosition" : 117120148, -- Левая координата варианта на хромосоме 
+    "rightAnchorPosition" : 117120150, -- Правая координата варианта на хромосоме 
+    "alleleSequence" : "G", -- Последовательность
+    варианта (то, что нашли у пациента) 
+    "referenceSequence" : "A", -- Последовательность в референсном геноме 
+    "alleleName" : "M1V", -- Имя, под которым этот генетический вариант известен генетикам 
+    "hgvs" : { -- Запись варианта в 3 формах номенклатуры HGVS 
+        "g": "g.117120149A>G",
+         "c": "c.123A>G", 
+         "p": "p.123Ter" },
+    "genotype" : "HETEROZYGOTE", -- Генотип варианта 
+    "significance" : "PATHOGENIC", -- Значимость варианта, может ли он привести к развитию заболевания 
+    "externalSourceEntries" : [{ -- Записи о варианте во внешних источниках 
+        "id" : "c.1A>G",
+        "link" : null,
+    "database" : { 
+        "name" : "CFTR-France", 
+        "version" : "26.01.2018",
+        "category" : "LOCUS SPECIFIC" },
+    "significance" : "UNKNOWN" }, 
+    { "id" : "53423",
+     "link" : "https://preview.ncbi.nlm.nih.gov/clinvar/variation/53423",
+      "database" : { "name" : "Clinvar", "version" : "02.10.2017", "category" : "COMMON" },
     "significance" : "PATHOGENIC" }, { "id" : "5", "link" :
     "http://genet.sickkids.on.ca/MutationDetailPage.external?sp=5",
     "database" : { "name" : "CFTR1", "version" : "14.02.2017", "category" :

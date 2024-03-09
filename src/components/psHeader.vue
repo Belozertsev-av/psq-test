@@ -35,7 +35,7 @@
 <style lang="scss">
 .header {
   width: 100%;
-  background-color: $backgroundPrimaryColor;
+  background-color: $headerColor;
   color: #fff;
 
   &__body {

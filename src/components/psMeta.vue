@@ -24,7 +24,7 @@
     }
 
     &__link {
-        color: $selectedColor;
+        color: $headerColor;
         text-decoration: underline;
     }
 
