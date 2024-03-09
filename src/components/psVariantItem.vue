@@ -1,9 +1,6 @@
 <template>
     <div class="item">
         <div class="item__body">
-            <div class="item__check column" @click="checkItem">
-                <input type="checkbox" :checked="isChecked" name="report" :id="variant.alleleName">
-            </div>
             <div class="item__name column">{{ variant.alleleName }}</div>
             <ps-significance-indicator class="item__significance column"
                 :significance="variant.significance"></ps-significance-indicator>
@@ -62,12 +59,6 @@ const props = defineProps({
     }
 })
 
-const isChecked = ref(false)
-const checkItem = () => {
-    localStore.toggleVariant(props.variant)
-    isChecked.value = !isChecked.value
-}
-
 const genotype = computed(() => {
     if (props.variant.genotype == "HETEROZYGOTE") return "Гетерозигота"
     else if (props.variant.genotype == "HOMOZYGOTE") return "Гомозигота"
@@ -80,16 +71,41 @@ const aliasColor = (item) => {
 <style lang="scss" scoped>
 .item {
     width: 100%;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 
     &__body {
         cursor: pointer;
         width: 100%;
         display: grid;
-        grid-template-columns: 2fr 3fr 5fr 5fr 3fr 3fr 3fr 6fr;
+        grid-template-columns: 4fr 5fr 5fr 3fr 3fr 3fr 5fr;
         padding: $padding;
         transition: 0.2s ease;
+        position: relative;
+
+        &::before {
+            content: "";
+            position: absolute;
+            transition: 0.2s ease;
+            z-index: -1;
+            position: absolute;
+            top: 0;
+            left: -150px;
+            height: 100%;
+            width: 300px;
+            background-color: #f7f7f7;
+            opacity: 0;
+        }
 
         &:hover {
+
+            &::before {
+                content: "";
+                opacity: 1;
+            }
+
             background-color: #f7f7f7;
         }
     }

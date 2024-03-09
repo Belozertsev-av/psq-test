@@ -17,9 +17,9 @@
                     <div class="hgvs__column">Протеины</div>
                 </div>
                 <div class="hgvs__row">
-                    <div class="hgvs__column">{{ item.hgvs }}</div>
-                    <div class="hgvs__column">{{ item.hgvs }}</div>
-                    <div class="hgvs__column">{{ item.hgvs }}</div>
+                    <div class="hgvs__column">{{ item.hgvs.g }}</div>
+                    <div class="hgvs__column">{{ item.hgvs.c }}</div>
+                    <div class="hgvs__column">{{ item.hgvs.p }}</div>
                 </div>
             </div>
             <div class="popup__table">
@@ -44,14 +44,16 @@
             <div class="popup__external-libraries">
                 <div class="popup__external-title title">Внешние источники</div>
                 <div class="popup__elems">
-                    <div class="popup__el" v-for="el in   item.externalSourceEntries  " :key="el.id">
-                        <div class="el__name">{{ el.database.name }}</div>
+                    <div class="popup__el" v-for="el in    item.externalSourceEntries  " :key="el.id">
+                        <div class="el__name">
+                            <a :href="el.link" :class="{ link: el.link != null, unactive: el.link == null }">{{
+                    el.database.name }}</a>
+                        </div>
                         <div class="el__version">{{ el.database.version }}</div>
                         <div class="el__id">{{ el.id }}</div>
                         <ps-significance-indicator class="el__significance"
                             :significance="el.significance ?? 'Не указано'">
                         </ps-significance-indicator>
-
                     </div>
                 </div>
             </div>
@@ -62,7 +64,6 @@
 <script setup>
 import psSignificanceIndicator from './psSignificanceIndicator.vue';
 import { useVariantStore } from '../stores/variantStore';
-import { computed } from 'vue';
 
 const localStore = useVariantStore()
 const props = defineProps({
@@ -130,11 +131,10 @@ const props = defineProps({
         display: grid;
         width: 100%;
         grid-template-columns: 1fr 1fr;
-        padding: $padding;
+        padding: 0 $paddingMedium;
     }
 
     &__column {
-        padding: $padding;
         display: grid;
         grid-template-rows: repeat(1fr, 6);
         gap: $padding;
@@ -177,6 +177,13 @@ const props = defineProps({
     &__version {}
 
     &__category {}
+}
+
+.unactive {
+    color: #000;
+    background-color: $backgroundSecondaryColor;
+    padding: calc($padding/2) $padding;
+    border-radius: $radius;
 }
 
 .hgvs {

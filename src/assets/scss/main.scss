@@ -25,7 +25,11 @@ body{
     @include adaptive-value('font-size', $subtitleSizeStart, $subtitleSizeEnd, 0);
 }
 .link {
-    color: $fontSecondaryColor;
+    font-weight: 700;
+    color: #fff;
+    background-color: $primaryColor;
+    padding: calc($padding/2) $padding;
+    border-radius: $radius;
     cursor: pointer;
 }
 .btn {

@@ -14,12 +14,17 @@
           <div class="variants__column external">Внешние источники</div>
         </div>
         <div class="variants__main-window-body">
-          <ps-variant-item class="variants__item" v-for="  item   in   variantsData  " :key="item.alleleName"
-            :variant="item" @click="openPopUp(item)">
-          </ps-variant-item>
+          <div class="variants__item" v-for="  item   in   variantsData  " :key="item.alleleName">
+            <div class="variants__check" @click="checkItem(item)">
+              <input class="variants__input" type="checkbox" name="report" :id="item.alleleName">
+              <div class="variants__checkmark"></div>
+            </div>
+            <ps-variant-item :variant="item" @click="openPopUp(item)">
+            </ps-variant-item>
+          </div>
         </div>
       </div>
-      <ps-popup class="variants__main-popup" :item="currentVariant">
+      <ps-popup class="variants__main-popup" :item="currentVariant" v-if="isOpenedPopUp">
       </ps-popup>
     </div>
   </div>
@@ -36,6 +41,11 @@ const localStore = useVariantStore()
 const variantsData = ref([])
 const currentVariant = ref({})
 const isOpenedPopUp = ref(false)
+
+
+const checkItem = (item) => {
+  localStore.toggleVariant(item)
+}
 
 const openPopUp = (variant) => {
   if (currentVariant.value == variant) {
@@ -81,6 +91,17 @@ onMounted(() => {
   &__main-window-body {
     overflow-y: auto;
     height: 73dvh;
+    scrollbar-width: 10px;
+    scrollbar-color: $backgroundSecondaryColor;
+
+    &::-webkit-scrollbar {
+      width: 10px;
+      background-color: $backgroundSecondaryColor;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: #fff;
+    }
   }
 
   &__main-popup {
@@ -108,6 +129,53 @@ onMounted(() => {
     text-align: center;
     font-weight: 700;
     padding: $padding;
+  }
+
+  &__item {
+    display: grid;
+    grid-template-columns: 2fr 28fr;
+  }
+
+  &__check {
+    transition: 0.2s;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 3;
+
+    &:hover {
+      .variants__input~.variants__checkmark {
+        background-color: #EEEEEE;
+      }
+    }
+
+    .variants__input:checked~.variants__checkmark {
+      transform: scale(0.9);
+      background-color: $primaryColor;
+    }
+  }
+
+  &__input {
+    cursor: pointer;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    z-index: 1;
+  }
+
+  &__checkmark {
+    z-index: -1;
+    transition: 0.2s;
+    position: absolute;
+    top: calc(50% - 10px);
+    left: calc(50% - 10px);
+    width: 20px;
+    height: 20px;
+    border: 2px solid $shadowColor;
+    border-radius: $radius;
   }
 }
 
