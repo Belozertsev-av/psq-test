@@ -4,7 +4,7 @@
 
         </div>
         <div class="variants__main-window">
-            Report
+            report
         </div>
     </div>
 </template>

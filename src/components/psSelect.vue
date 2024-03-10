@@ -1,12 +1,12 @@
 <template>
-    <div class="select">
-        <label class="select__label-top">{{ props.label }}</label>
+    <div class="select" v-click-outside="() => isActive = false">
+        <label class="select__label-top">{{ props.type }}</label>
         <button class="select__button" @click="isActive = !isActive">
             <span class="select__value">{{ labelToDisplay }}</span>
             <span class="select__arrow"></span>
         </button>
         <ul class="select__dropdown" :class="{ active: isActive }">
-            <li class="select__li" v-for="value in props.values" :key="props.values.indexOf(value)"
+            <li class="select__li" v-for=" value  in  props.values " :key="props.values.indexOf(value)"
                 @click="selectValue(value)">
                 <input class="select__input" type="checkbox" :value="value" name="select-item" />
                 <label class="select__label">{{ value }}</label>
@@ -16,11 +16,12 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue';
-import { ref } from 'vue';
-const emits = defineEmits(['selectedValues'])
+import { computed, ref } from 'vue';
+import { mapAndEmit } from '../utils/methods';
+
+const emits = defineEmits(['updateFilters'])
 const props = defineProps({
-    label: {
+    type: {
         type: String,
         required: true,
         default: "Поле"
@@ -34,17 +35,21 @@ const props = defineProps({
 const isActive = ref(false)
 const selectedValues = ref([])
 const selectValue = (value) => {
-    if (selectedValues.value.includes(value)) selectedValues.value.splice(selectedValues.value.indexOf(value), 1)
-    else selectedValues.value.push(value)
+    if (selectedValues.value.includes(value)) {
+        selectedValues.value.splice(selectedValues.value.indexOf(value), 1)
+        mapAndEmit(selectedValues.value, emits, props)
+    }
+    else {
+        selectedValues.value.push(value)
+        mapAndEmit(selectedValues.value, emits, props)
+    }
 }
 const labelToDisplay = computed(() => {
-    if (selectedValues.value.length == 0) return `Выберите ${props.label}`
+    if (selectedValues.value.length == 0) return `Выберите ${props.type}`
     else {
         return `Выбрано ${selectedValues.value.length} элементов`
     }
 })
-
-
 </script>
 
 <style lang="scss" scoped>
@@ -96,7 +101,6 @@ const labelToDisplay = computed(() => {
         box-shadow: 0px 0px 4px $shadowColor;
         display: flex;
         flex-direction: column;
-        max-width: 200px;
         z-index: 4;
 
         li {

@@ -1,7 +1,8 @@
 <template>
-    <div class="input">
-        <label class="input__label-top">{{ label }}</label>
-        <input class="input__field" type="text" v-model="inputField" @change="enterValue" @click="isActive = !isActive">
+    <div class="input" v-click-outside="() => isActive = false">
+        <label class="input__label-top">{{ type }}</label>
+        <input class="input__field" type="text" :placeholder="labelToDisplay" v-model="inputField" @change="enterValue"
+            @click="isActive = !isActive">
         </input>
         <ul class="input__dropdown" :class="{ active: isActive }">
             <li class="input__li" v-for="value in enteredValues" :key="enteredValues.indexOf(value)">
@@ -15,9 +16,12 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
+import { mapAndEmit } from '../utils/methods';
+
+const emits = defineEmits(['updateFilters'])
 const props = defineProps({
-    label: {
+    type: {
         type: String,
         required: true,
         default: "Значение"
@@ -31,13 +35,21 @@ const enterValue = () => {
         enteredValues.value.push(inputField.value)
         inputField.value = ""
         isActive.value = true
+        mapAndEmit(enteredValues.value, emits, props)
     }
 }
 const deleteValue = (value) => {
     if (enteredValues.value.includes(value)) {
         enteredValues.value.splice(enteredValues.value.indexOf(value), 1)
+        mapAndEmit(enteredValues.value, emits, props)
     }
 }
+const labelToDisplay = computed(() => {
+    if (enteredValues.value.length == 0) return `Введите ${props.type}`
+    else {
+        return `Введено ${enteredValues.value.length} значений`
+    }
+})
 </script>
 
 <style lang="scss" scoped>
@@ -64,6 +76,10 @@ const deleteValue = (value) => {
         display: flex;
         justify-content: space-between;
         align-items: center;
+
+        &::placeholder {
+            color: #000;
+        }
     }
 
     &__value {
@@ -89,7 +105,6 @@ const deleteValue = (value) => {
         box-shadow: 0px 0px 4px $shadowColor;
         display: flex;
         flex-direction: column;
-        max-width: 200px;
         z-index: 4;
 
         li {

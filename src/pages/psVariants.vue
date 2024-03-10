@@ -2,11 +2,14 @@
   <div class="variants">
     <div class="variants__toolbar" ref="toolbar">
       <div class="variants__filters">
-        <psInput :label="'Имя варианта'"></psInput>
-        <ps-select :label="'Значимость'" :values="['PATHOGENIC', 'LIKELY_PATHOGENIC', 'BENIGN', 'UNDEFINED'
-          , 'UNCERTAIN', 'LIKELY_BENIGN']" @selected-values="filterBy"></ps-select>
-        <ps-select :label="'Генотип'" :values="['HETEROZYGOTE', 'HOMOZYGOTE']" @selected-values="filterBy"></ps-select>
-        <psInput :label="'NGVS имя'"></psInput>
+        <psInput :type="'alleleName'" @update-filters="updateFiltredData"></psInput>
+        <ps-select :type="'significance'"
+          :values="['PATHOGENIC', 'LIKELY_PATHOGENIC', 'BENIGN', 'UNDEFINED', 'UNCERTAIN', 'LIKELY_BENIGN']"
+          @update-filters="updateFiltredData">
+        </ps-select>
+        <ps-select :type="'genotype'" :values="['HETEROZYGOTE', 'HOMOZYGOTE']" @update-filters="updateFiltredData">
+        </ps-select>
+        <psInput :type="'hgvs'" @update-filters="updateFiltredData"></psInput>
       </div>
     </div>
     <div class="variants__body" :class="{ opened: isOpenedPopUp }">
@@ -47,10 +50,14 @@ import { onMounted, ref, computed } from 'vue';
 
 const localStore = useVariantStore()
 const variantsData = ref([])
+
+const params = ref([])
+const filtredData = ref(variantsData.value)
+
+
 const currentVariant = ref({})
 const isOpenedPopUp = ref(false)
 const toolbar = ref(null)
-const toolbarHeight = ref(0)
 
 const checkItem = (item) => {
   localStore.toggleVariant(item)
@@ -64,6 +71,29 @@ const openPopUp = (variant) => {
   else {
     currentVariant.value = variant
     isOpenedPopUp.value = true
+  }
+
+}
+
+const updateFiltredData = (newParams) => {
+  if (newParams != null || newParams != []) {
+    newParams.forEach(param => {
+      let bool = false
+      for (let i = 0; i < params.value.length; i++) {
+        if (params.value[i].value == param.value) bool = true
+      }
+      if (!bool) params.value.push(param)
+    });
+    console.log(params.value)
+    filtredData.value = variantsData.value.filter((elem) => {
+      params.value.forEach(element => {
+        if (element.type == "alleleName") {
+          // TODO
+          if (elem.alleleName == element.value) return elem
+        }
+      });
+    })
+    console.log(filtredData.value)
   }
 
 }

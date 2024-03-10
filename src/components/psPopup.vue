@@ -148,6 +148,7 @@ const props = defineProps({
     &__external-libraries {
         width: 100%;
         padding: $padding;
+        margin-bottom: $paddingMedium;
     }
 
     &__external-title {
@@ -163,6 +164,7 @@ const props = defineProps({
     &__el {
         display: grid;
         grid-template-columns: 1.3fr 0.9fr 0.9fr 0.9fr;
+        align-items: center;
         padding: calc($padding/2) $padding;
     }
 }
