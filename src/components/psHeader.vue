@@ -35,10 +35,12 @@
 <style lang="scss">
 .header {
   width: 100%;
+  height: 100%;
   background-color: $headerColor;
   color: #fff;
 
   &__body {
+    height: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;

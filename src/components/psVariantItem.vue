@@ -80,7 +80,7 @@ const aliasColor = (item) => {
         cursor: pointer;
         width: 100%;
         display: grid;
-        grid-template-columns: 4fr 5fr 5fr 3fr 3fr 3fr 5fr;
+        grid-template-columns: 4fr 4fr 5fr 3fr 3fr 3fr 4fr;
         padding: $padding;
         transition: 0.2s ease;
         position: relative;
@@ -122,10 +122,10 @@ const aliasColor = (item) => {
         cursor: pointer;
         background-color: $primaryColor;
         border-radius: $radius;
-        font-size: 10px;
+        font-size: 8px;
         color: #fff;
-        width: 20px;
-        height: 20px;
+        width: 15px;
+        height: 15px;
         margin: calc($padding/2);
         display: flex;
         justify-content: center;
@@ -148,5 +148,29 @@ const aliasColor = (item) => {
     align-items: center;
     text-align: center;
     padding: 0 $padding;
+}
+
+.opened {
+    .item {
+        &__body {
+            grid-template-columns: 4fr 7fr 5fr 2fr 3fr 2fr 3fr;
+        }
+    }
+}
+
+@media screen and (max-width: 1100px) {
+    .opened {
+        .item {
+            &__body {
+                grid-template-columns: 4fr 6fr 5fr 2fr 3fr 2fr 4fr;
+            }
+        }
+    }
+
+    .item {
+        &__body {
+            grid-template-columns: 4fr 6fr 5fr 2fr 3fr 2fr 4fr;
+        }
+    }
 }
 </style>

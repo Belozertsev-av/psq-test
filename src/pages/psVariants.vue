@@ -1,7 +1,13 @@
 <template>
   <div class="variants">
-    <div class="variants__toolbar">
-
+    <div class="variants__toolbar" ref="toolbar">
+      <div class="variants__filters">
+        <psInput :label="'Имя варианта'"></psInput>
+        <ps-select :label="'Значимость'" :values="['PATHOGENIC', 'LIKELY_PATHOGENIC', 'BENIGN', 'UNDEFINED'
+          , 'UNCERTAIN', 'LIKELY_BENIGN']" @selected-values="filterBy"></ps-select>
+        <ps-select :label="'Генотип'" :values="['HETEROZYGOTE', 'HOMOZYGOTE']" @selected-values="filterBy"></ps-select>
+        <psInput :label="'NGVS имя'"></psInput>
+      </div>
     </div>
     <div class="variants__body" :class="{ opened: isOpenedPopUp }">
       <div class="variants__main-window">
@@ -14,12 +20,12 @@
           <div class="variants__column external">Внешние источники</div>
         </div>
         <div class="variants__main-window-body">
-          <div class="variants__item" v-for="  item   in   variantsData  " :key="item.alleleName">
+          <div class="variants__item" v-for="     item    in    variantsData   " :key="item.alleleName">
             <div class="variants__check" @click="checkItem(item)">
               <input class="variants__input" type="checkbox" name="report" :id="item.alleleName">
               <div class="variants__checkmark"></div>
             </div>
-            <ps-variant-item :variant="item" @click="openPopUp(item)">
+            <ps-variant-item :variant="item" @click="openPopUp(item)" :class="{ selected: currentVariant === item }">
             </ps-variant-item>
           </div>
         </div>
@@ -33,15 +39,18 @@
 <script setup>
 import psVariantItem from '../components/psVariantItem.vue';
 import psPopup from '../components/psPopup.vue';
+import psSelect from '../components/psSelect.vue';
+import psInput from '../components/psInput.vue';
 import { useVariantStore } from '../stores/variantStore';
 import { getVariants } from '../api/variants';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 
 const localStore = useVariantStore()
 const variantsData = ref([])
 const currentVariant = ref({})
 const isOpenedPopUp = ref(false)
-
+const toolbar = ref(null)
+const toolbarHeight = ref(0)
 
 const checkItem = (item) => {
   localStore.toggleVariant(item)
@@ -73,24 +82,39 @@ onMounted(() => {
 
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .variants {
-  box-shadow: 0px 0px 3px $shadowColor;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
 
   &__toolbar {
     border-top-right-radius: $radius;
-    height: 70px;
+    width: 100%;
+    display: flex;
     background-color: $backgroundPrimaryColor;
+    @include adaptive-value('padding', 16, 4, 0);
+  }
+
+  &__filters {
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
   }
 
   &__body {
     display: grid;
     grid-template-columns: 1fr;
+
   }
 
+  &__main-window {}
+
   &__main-window-body {
+    display: flex;
+    flex-direction: column;
+    max-height: 79svh;
     overflow-y: auto;
-    height: 73dvh;
     scrollbar-width: 10px;
     scrollbar-color: $backgroundSecondaryColor;
 
@@ -106,9 +130,9 @@ onMounted(() => {
 
   &__main-popup {
     opacity: 0;
-    box-shadow: 0px 0px 3px $shadowColor;
+    box-shadow: 0 0 3px $shadowColor;
     overflow-y: auto;
-    height: 78dvh;
+    max-height: 79svh;
     transition: opacity 0.2s ease;
     scrollbar-width: 0;
 
@@ -119,16 +143,15 @@ onMounted(() => {
 
   &__legends {
     display: grid;
-    grid-template-columns: 2fr 3fr 5fr 5fr 9fr 6fr;
+    grid-template-columns: 2fr 4fr 4fr 5fr 9fr 4fr;
     align-items: center;
     background-color: $backgroundSecondaryColor;
-    padding: calc($padding/2);
   }
 
   &__column {
     text-align: center;
     font-weight: 700;
-    padding: $padding;
+    @include adaptive-value('padding', 8, 4, 0);
   }
 
   &__item {
@@ -183,13 +206,51 @@ onMounted(() => {
   display: grid;
   grid-template-columns: 6.5fr 3.5fr;
 
+  .variants__legends {
+    grid-template-columns: 2fr 4fr 7fr 4fr 8fr 3fr;
+  }
+
   .variants__main-popup {
     opacity: 1;
 
   }
 }
 
+.selected {
+  background-color: $secondaryColor;
+  border-top-left-radius: $radius;
+  border-bottom-left-radius: $radius;
+}
+
 .external {
   text-align: left;
+}
+
+@media screen and (max-width: 1100px) {
+  .opened {
+    display: flex;
+    flex-direction: column;
+
+    .variants__main-window-body {
+      height: calc(79svh / 2);
+    }
+
+    .variants__legends {
+      grid-template-columns: 2fr 4fr 5fr 5fr 8fr 4fr;
+    }
+  }
+
+  .variants {
+
+    &__legends {
+      grid-template-columns: 2fr 4fr 5fr 5fr 8fr 4fr;
+    }
+
+    &__main-popup {
+      background-color: #fff;
+      z-index: 4;
+      height: calc(79svh / 2);
+    }
+  }
 }
 </style>

@@ -122,7 +122,8 @@ const props = defineProps({
     }
 
     &__hgvs {
-        padding: $padding;
+        padding: $padding $paddingMedium;
+        width: 100%;
         display: flex;
         flex-direction: column;
     }
@@ -161,7 +162,7 @@ const props = defineProps({
 
     &__el {
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr 1fr;
+        grid-template-columns: 1.3fr 0.9fr 0.9fr 0.9fr;
         padding: calc($padding/2) $padding;
     }
 }
@@ -187,6 +188,10 @@ const props = defineProps({
 }
 
 .hgvs {
+    &__title {
+        color: #fff;
+    }
+
     &__top {
         width: 100%;
         padding: $padding;

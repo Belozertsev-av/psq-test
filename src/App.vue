@@ -18,4 +18,12 @@ import { RouterView } from 'vue-router';
 
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+header {
+  height: 7dvh;
+}
+
+main {
+  height: 93dvh;
+}
+</style>
