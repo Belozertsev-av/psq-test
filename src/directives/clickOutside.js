@@ -1,3 +1,4 @@
+// Директива обработки нажатия вне элемента
 const clickOutside = {
     beforeMount(el, binding) {
         el.__ClickOutsideHandler__ = (e) => {

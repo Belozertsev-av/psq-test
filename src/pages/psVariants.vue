@@ -1,18 +1,18 @@
 <template>
   <div class="variants">
-    <div class="variants__toolbar" ref="toolbar">
+    <div class="variants__toolbar">
       <div class="variants__filters">
-        <psInput :type="'alleleName'" @delete-filter="deleteFilter(alleleNameFilters, $event)"
+        <psInput :type="'Имя варианта'" @delete-filter="deleteFilter(alleleNameFilters, $event)"
           @push-filter="addFilter(alleleNameFilters, $event)"></psInput>
-        <ps-select :type="'significance'"
+        <ps-select :type="'Значимость'"
           :values="['PATHOGENIC', 'LIKELY_PATHOGENIC', 'BENIGN', 'UNDEFINED', 'UNCERTAIN', 'LIKELY_BENIGN']"
           @delete-filter="deleteFilter(significanceFilters, $event)"
           @push-filter="addFilter(significanceFilters, $event)">
         </ps-select>
-        <ps-select :type="'genotype'" :values="['HETEROZYGOTE', 'HOMOZYGOTE']"
+        <ps-select :type="'Генотип'" :values="['HETEROZYGOTE', 'HOMOZYGOTE']"
           @delete-filter="deleteFilter(genotypeFilters, $event)" @push-filter="addFilter(genotypeFilters, $event)">
         </ps-select>
-        <psInput :type="'hgvs'" @delete-filter="deleteFilter(hgvsFilters, $event)"
+        <psInput :type="'HGVS'" @delete-filter="deleteFilter(hgvsFilters, $event)"
           @push-filter="addFilter(hgvsFilters, $event)">
         </psInput>
       </div>
@@ -27,14 +27,16 @@
           <div class="variants__column">HGVS</div>
           <div class="variants__column external">Внешние источники</div>
         </div>
-        <div class="variants__main-window-body">
-          <div class="variants__item" v-for="     item    in    filtredData   " :key="item.alleleName">
-            <div class="variants__check" @click="checkItem(item)">
-              <input class="variants__input" type="checkbox" name="report" :id="item.alleleName">
-              <div class="variants__checkmark"></div>
+        <div class="variants__main-window-body" @scroll="loadOnScroll">
+          <div class="variants__items-list">
+            <div class="variants__item" v-for="item in filtredData.slice(0, pageEnd) " :key="item.alleleName">
+              <div class="variants__check" @click="checkItem(item)">
+                <input class="variants__input" type="checkbox" name="report" :id="item.alleleName">
+                <div class="variants__checkmark"></div>
+              </div>
+              <ps-variant-item :variant="item" @click="openPopUp(item)" :class="{ selected: currentVariant === item }">
+              </ps-variant-item>
             </div>
-            <ps-variant-item :variant="item" @click="openPopUp(item)" :class="{ selected: currentVariant === item }">
-            </ps-variant-item>
           </div>
         </div>
       </div>
@@ -52,23 +54,28 @@ import psInput from '../components/psInput.vue';
 import { useVariantStore } from '../stores/variantStore';
 import { getVariants } from '../api/variants';
 import { onMounted, ref, computed } from 'vue';
-
+// ======================== Переменные ========================
+// Переменные для данных полученных по api и store
 const localStore = useVariantStore()
 const variantsData = ref([])
 
+// Выбранные фильтры
 const alleleNameFilters = ref([])
 const hgvsFilters = ref([])
 const genotypeFilters = ref([])
 const significanceFilters = ref([])
 
+// Переменные UI
 const currentVariant = ref({})
+const pageEnd = ref(20)
 const isOpenedPopUp = ref(false)
-const toolbar = ref(null)
 
+// ======================== Функции ========================
+// Выбор элемента для добавления в отчет
 const checkItem = (item) => {
   localStore.toggleVariant(item)
 }
-
+// Открытие сайдбара с подробностями
 const openPopUp = (variant) => {
   if (currentVariant.value == variant) {
     currentVariant.value = {}
@@ -80,7 +87,14 @@ const openPopUp = (variant) => {
   }
 
 }
+// Подгрузка элементов при скролле
+const loadOnScroll = (e) => {
+  if (e.target.offsetHeight + e.target.scrollTop >= e.target.scrollHeight - 50) {
+    pageEnd.value = Math.min(filtredData.value.length, pageEnd.value + 20)
+  }
+}
 
+// Принимает новое значение фильтров по emit
 const addFilter = (params, newParam) => {
   if (newParam != null || newParam != {}) {
     if (params.length != 0) {
@@ -93,6 +107,7 @@ const addFilter = (params, newParam) => {
   }
   console.log(params)
 }
+// Принимает значение фильтра для удаления по emit
 const deleteFilter = (params, ParamToDelete) => {
   if (ParamToDelete != null || ParamToDelete != {}) {
     if (params.length != 0) {
@@ -104,6 +119,7 @@ const deleteFilter = (params, ParamToDelete) => {
   console.log(params)
 }
 
+// ======================== Вычисляемые значения ========================
 const filtredData = computed(() => {
   if (alleleNameFilters.value.length == 0
     && hgvsFilters.value.length == 0
@@ -145,10 +161,11 @@ const filtredData = computed(() => {
       if (!checkResults.includes(false)) return el
       checkResults = []
     })
+    pageEnd.value = 20
     return newData
   }
 })
-
+// ======================== Хуки жизненного цикла ========================
 onMounted(() => {
   (async () => {
     await getVariants()
@@ -160,7 +177,6 @@ onMounted(() => {
       })
   })()
 })
-
 </script>
 
 <style lang="scss">
@@ -168,6 +184,7 @@ onMounted(() => {
   height: 100%;
   display: grid;
   grid-template-columns: 1fr;
+  grid-template-rows: 1fr 9fr;
 
   &__toolbar {
     border-top-right-radius: $radius;
@@ -194,7 +211,7 @@ onMounted(() => {
   &__main-window-body {
     display: flex;
     flex-direction: column;
-    max-height: 79svh;
+    height: calc(96% - 28.4px);
     overflow-y: auto;
     scrollbar-width: 10px;
     scrollbar-color: $backgroundSecondaryColor;
@@ -207,6 +224,10 @@ onMounted(() => {
     &::-webkit-scrollbar-thumb {
       background-color: #fff;
     }
+  }
+
+  &__items-list {
+    max-height: 60svh;
   }
 
   &__main-popup {
@@ -224,7 +245,7 @@ onMounted(() => {
 
   &__legends {
     display: grid;
-    grid-template-columns: 2fr 4fr 4fr 5fr 9fr 4fr;
+    grid-template-columns: 2fr 4fr 5fr 5fr 9fr 5fr;
     align-items: center;
     background-color: $backgroundSecondaryColor;
   }
@@ -256,7 +277,7 @@ onMounted(() => {
     }
 
     .variants__input:checked~.variants__checkmark {
-      transform: scale(0.9);
+      transform: scale(0.7);
       background-color: $primaryColor;
     }
   }
@@ -317,14 +338,13 @@ onMounted(() => {
     }
 
     .variants__legends {
-      grid-template-columns: 2fr 4fr 5fr 5fr 8fr 4fr;
+      grid-template-columns: 2fr 3fr 7fr 5fr 7fr 5fr;
     }
   }
 
   .variants {
-
     &__legends {
-      grid-template-columns: 2fr 4fr 5fr 5fr 8fr 4fr;
+      grid-template-columns: 2fr 3fr 7fr 5fr 7fr 5fr;
     }
 
     &__main-popup {

@@ -63,9 +63,7 @@
 
 <script setup>
 import psSignificanceIndicator from './psSignificanceIndicator.vue';
-import { useVariantStore } from '../stores/variantStore';
-
-const localStore = useVariantStore()
+// ======================== Props ========================
 const props = defineProps({
     item: {
         type: Object,

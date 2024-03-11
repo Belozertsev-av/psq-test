@@ -1,6 +1,6 @@
 <template>
     <div class="input" v-click-outside="() => isActive = false">
-        <label class="input__label-top">{{ type }}</label>
+        <label class="input__label-top">{{ props.type }}</label>
         <input class="input__field" type="text" :placeholder="labelToDisplay" v-model="inputField" @change="enterValue"
             @click="isActive = !isActive">
         </input>
@@ -17,7 +17,7 @@
 
 <script setup>
 import { ref, computed } from 'vue';
-
+// ======================== Props, Emits ========================
 const emits = defineEmits(['pushFilter', 'deleteFilter'])
 const props = defineProps({
     type: {
@@ -26,9 +26,11 @@ const props = defineProps({
         default: "Значение"
     }
 })
+// ======================== Переменные ========================
 const isActive = ref(false)
 const inputField = ref("")
 const enteredValues = ref([])
+// ======================== Функции ========================
 const enterValue = () => {
     if (!enteredValues.value.includes(inputField.value) && inputField.value != '') {
         enteredValues.value.push(inputField.value)
@@ -43,6 +45,7 @@ const deleteValue = (value) => {
         emits('deleteFilter', value)
     }
 }
+// ======================== Вычисляемые значения ========================
 const labelToDisplay = computed(() => {
     if (enteredValues.value.length == 0) return `Введите ${props.type}`
     else {

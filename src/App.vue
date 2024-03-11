@@ -3,9 +3,7 @@
     <header>
       <ps-header></ps-header>
     </header>
-    <ps-results>
-      <router-view></router-view>
-    </ps-results>
+    <ps-results></ps-results>
   </div>
 
 </template>
@@ -13,7 +11,6 @@
 <script setup>
 import psHeader from './components/psHeader.vue';
 import psResults from './components/psResults.vue';
-import { RouterView } from 'vue-router';
 
 
 </script>

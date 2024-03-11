@@ -12,9 +12,11 @@
                 </div>
             </div>
             <div class="results__main-window">
-                <Transition>
-                    <slot></slot>
-                </Transition>
+                <router-view v-slot="{ Component }">
+                    <keep-alive>
+                        <component :is=" Component " />
+                    </keep-alive>
+                </router-view>
             </div>
         </div>
     </main>

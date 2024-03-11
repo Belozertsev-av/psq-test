@@ -17,7 +17,7 @@
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
-
+// ======================== Props, Emits ========================
 const emits = defineEmits(['pushFilter', 'deleteFilter'])
 const props = defineProps({
     type: {
@@ -31,8 +31,10 @@ const props = defineProps({
         default: ["Value"]
     }
 })
+// ======================== Переменные ========================
 const isActive = ref(false)
 const selectedValues = ref([])
+// ======================== Функции ========================
 const selectValue = (value) => {
     if (selectedValues.value.includes(value)) {
         selectedValues.value.splice(selectedValues.value.indexOf(value), 1)
@@ -43,6 +45,7 @@ const selectValue = (value) => {
         emits('pushFilter', value)
     }
 }
+// ======================== Вычисляемые значения ========================
 const labelToDisplay = computed(() => {
     if (selectedValues.value.length == 0) return `Выберите ${props.type}`
     else {
@@ -66,7 +69,7 @@ const labelToDisplay = computed(() => {
     }
 
     &__button {
-        @include adaptive-value('width', 240, 180, 0);
+        @include adaptive-value('width', 240, 160, 0);
         background-color: rgba(255, 255, 255, 0.6);
         border-bottom: 2px solid #00000090;
         border-top-left-radius: $radius;

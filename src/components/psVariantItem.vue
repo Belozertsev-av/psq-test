@@ -19,11 +19,9 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
-import { useVariantStore } from '../stores/variantStore';
+import { computed } from 'vue';
 import psSignificanceIndicator from './psSignificanceIndicator.vue';
-
-const localStore = useVariantStore()
+// ======================== Props ========================
 const props = defineProps({
     variant: {
         type: Object,
@@ -58,13 +56,15 @@ const props = defineProps({
         }
     }
 })
-
+// ======================== Вычисляемые значения ========================
 const genotype = computed(() => {
     if (props.variant.genotype == "HETEROZYGOTE") return "Гетерозигота"
     else if (props.variant.genotype == "HOMOZYGOTE") return "Гомозигота"
 })
-const aliasColor = (item) => {
-    if (item == null) return "#b7b3b396"
+// ======================== Функции ========================
+// Определяет есть ли ссылка на источник
+const aliasColor = (link) => {
+    if (link == null) return "#b7b3b396"
 }
 </script>
 
@@ -80,7 +80,7 @@ const aliasColor = (item) => {
         cursor: pointer;
         width: 100%;
         display: grid;
-        grid-template-columns: 4fr 4fr 5fr 3fr 3fr 3fr 4fr;
+        grid-template-columns: 4fr 5fr 5fr 3fr 3fr 3fr 5fr;
         padding: $padding;
         transition: 0.2s ease;
         position: relative;
@@ -148,6 +148,7 @@ const aliasColor = (item) => {
     align-items: center;
     text-align: center;
     padding: 0 $padding;
+    word-wrap: break-word;
 }
 
 .opened {
@@ -162,14 +163,14 @@ const aliasColor = (item) => {
     .opened {
         .item {
             &__body {
-                grid-template-columns: 4fr 6fr 5fr 2fr 3fr 2fr 4fr;
+                grid-template-columns: 3fr 7fr 5fr 2fr 3fr 2fr 5fr;
             }
         }
     }
 
     .item {
         &__body {
-            grid-template-columns: 4fr 6fr 5fr 2fr 3fr 2fr 4fr;
+            grid-template-columns: 3fr 7fr 5fr 2fr 3fr 2fr 5fr;
         }
     }
 }
