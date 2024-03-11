@@ -17,9 +17,8 @@
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
-import { mapAndEmit } from '../utils/methods';
 
-const emits = defineEmits(['updateFilters'])
+const emits = defineEmits(['pushFilter', 'deleteFilter'])
 const props = defineProps({
     type: {
         type: String,
@@ -37,11 +36,11 @@ const selectedValues = ref([])
 const selectValue = (value) => {
     if (selectedValues.value.includes(value)) {
         selectedValues.value.splice(selectedValues.value.indexOf(value), 1)
-        mapAndEmit(selectedValues.value, emits, props)
+        emits('deleteFilter', value)
     }
     else {
         selectedValues.value.push(value)
-        mapAndEmit(selectedValues.value, emits, props)
+        emits('pushFilter', value)
     }
 }
 const labelToDisplay = computed(() => {
@@ -68,7 +67,7 @@ const labelToDisplay = computed(() => {
 
     &__button {
         @include adaptive-value('width', 240, 180, 0);
-        background-color: rgba(255, 255, 255, 0.2);
+        background-color: rgba(255, 255, 255, 0.6);
         border-bottom: 2px solid #00000090;
         border-top-left-radius: $radius;
         border-top-right-radius: $radius;

@@ -2,14 +2,19 @@
   <div class="variants">
     <div class="variants__toolbar" ref="toolbar">
       <div class="variants__filters">
-        <psInput :type="'alleleName'" @update-filters="updateFiltredData"></psInput>
+        <psInput :type="'alleleName'" @delete-filter="deleteFilter(alleleNameFilters, $event)"
+          @push-filter="addFilter(alleleNameFilters, $event)"></psInput>
         <ps-select :type="'significance'"
           :values="['PATHOGENIC', 'LIKELY_PATHOGENIC', 'BENIGN', 'UNDEFINED', 'UNCERTAIN', 'LIKELY_BENIGN']"
-          @update-filters="updateFiltredData">
+          @delete-filter="deleteFilter(significanceFilters, $event)"
+          @push-filter="addFilter(significanceFilters, $event)">
         </ps-select>
-        <ps-select :type="'genotype'" :values="['HETEROZYGOTE', 'HOMOZYGOTE']" @update-filters="updateFiltredData">
+        <ps-select :type="'genotype'" :values="['HETEROZYGOTE', 'HOMOZYGOTE']"
+          @delete-filter="deleteFilter(genotypeFilters, $event)" @push-filter="addFilter(genotypeFilters, $event)">
         </ps-select>
-        <psInput :type="'hgvs'" @update-filters="updateFiltredData"></psInput>
+        <psInput :type="'hgvs'" @delete-filter="deleteFilter(hgvsFilters, $event)"
+          @push-filter="addFilter(hgvsFilters, $event)">
+        </psInput>
       </div>
     </div>
     <div class="variants__body" :class="{ opened: isOpenedPopUp }">
@@ -23,7 +28,7 @@
           <div class="variants__column external">Внешние источники</div>
         </div>
         <div class="variants__main-window-body">
-          <div class="variants__item" v-for="     item    in    variantsData   " :key="item.alleleName">
+          <div class="variants__item" v-for="     item    in    filtredData   " :key="item.alleleName">
             <div class="variants__check" @click="checkItem(item)">
               <input class="variants__input" type="checkbox" name="report" :id="item.alleleName">
               <div class="variants__checkmark"></div>
@@ -51,9 +56,10 @@ import { onMounted, ref, computed } from 'vue';
 const localStore = useVariantStore()
 const variantsData = ref([])
 
-const params = ref([])
-const filtredData = ref(variantsData.value)
-
+const alleleNameFilters = ref([])
+const hgvsFilters = ref([])
+const genotypeFilters = ref([])
+const significanceFilters = ref([])
 
 const currentVariant = ref({})
 const isOpenedPopUp = ref(false)
@@ -75,28 +81,73 @@ const openPopUp = (variant) => {
 
 }
 
-const updateFiltredData = (newParams) => {
-  if (newParams != null || newParams != []) {
-    newParams.forEach(param => {
-      let bool = false
-      for (let i = 0; i < params.value.length; i++) {
-        if (params.value[i].value == param.value) bool = true
-      }
-      if (!bool) params.value.push(param)
-    });
-    console.log(params.value)
-    filtredData.value = variantsData.value.filter((elem) => {
-      params.value.forEach(element => {
-        if (element.type == "alleleName") {
-          // TODO
-          if (elem.alleleName == element.value) return elem
-        }
-      });
-    })
-    console.log(filtredData.value)
+const addFilter = (params, newParam) => {
+  if (newParam != null || newParam != {}) {
+    if (params.length != 0) {
+      let isAlreadyExists = false
+      params.forEach(element => {
+        if (element == newParam) isAlreadyExists = true
+      })
+      if (!isAlreadyExists) params.push(newParam)
+    } else params.push(newParam)
   }
-
+  console.log(params)
 }
+const deleteFilter = (params, ParamToDelete) => {
+  if (ParamToDelete != null || ParamToDelete != {}) {
+    if (params.length != 0) {
+      params.forEach(element => {
+        if (element == ParamToDelete) params.splice(params.indexOf(ParamToDelete), 1)
+      })
+    }
+  }
+  console.log(params)
+}
+
+const filtredData = computed(() => {
+  if (alleleNameFilters.value.length == 0
+    && hgvsFilters.value.length == 0
+    && significanceFilters.value.length == 0
+    && genotypeFilters.value.length == 0) return variantsData.value
+  else {
+    let newData = variantsData.value.filter((el) => {
+      let checkResults = []
+      if (hgvsFilters.value.length > 0) {
+        let isPassed = false
+        for (let elem of hgvsFilters.value) {
+          if (el.hgvs.g.toLowerCase().includes(elem.toLowerCase()) ||
+            el.hgvs.c.toLowerCase().includes(elem.toLowerCase()) ||
+            el.hgvs.p.toLowerCase().includes(elem.toLowerCase())) isPassed = true
+        }
+        checkResults += isPassed
+      }
+      if (alleleNameFilters.value.length > 0) {
+        let isPassed = false
+        for (let elem of alleleNameFilters.value) {
+          if (el.alleleName.toLowerCase().includes(elem.toLowerCase())) isPassed = true
+        }
+        checkResults += isPassed
+      }
+      if (genotypeFilters.value.length > 0) {
+        let isPassed = false
+        for (let elem of genotypeFilters.value) {
+          if (el.genotype == elem) isPassed = true
+        }
+        checkResults += isPassed
+      }
+      if (significanceFilters.value.length > 0) {
+        let isPassed = false
+        for (let elem of significanceFilters.value) {
+          if (el.significance == elem) isPassed = true
+        }
+        checkResults += isPassed
+      }
+      if (!checkResults.includes(false)) return el
+      checkResults = []
+    })
+    return newData
+  }
+})
 
 onMounted(() => {
   (async () => {

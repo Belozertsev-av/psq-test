@@ -17,9 +17,8 @@
 
 <script setup>
 import { ref, computed } from 'vue';
-import { mapAndEmit } from '../utils/methods';
 
-const emits = defineEmits(['updateFilters'])
+const emits = defineEmits(['pushFilter', 'deleteFilter'])
 const props = defineProps({
     type: {
         type: String,
@@ -33,15 +32,15 @@ const enteredValues = ref([])
 const enterValue = () => {
     if (!enteredValues.value.includes(inputField.value) && inputField.value != '') {
         enteredValues.value.push(inputField.value)
-        inputField.value = ""
         isActive.value = true
-        mapAndEmit(enteredValues.value, emits, props)
+        emits('pushFilter', inputField.value)
+        inputField.value = ""
     }
 }
 const deleteValue = (value) => {
     if (enteredValues.value.includes(value)) {
         enteredValues.value.splice(enteredValues.value.indexOf(value), 1)
-        mapAndEmit(enteredValues.value, emits, props)
+        emits('deleteFilter', value)
     }
 }
 const labelToDisplay = computed(() => {
@@ -68,7 +67,7 @@ const labelToDisplay = computed(() => {
 
     &__field {
         @include adaptive-value('width', 240, 140, 0);
-        background-color: rgba(255, 255, 255, 0.2);
+        background-color: rgba(255, 255, 255, 0.6);
         border-bottom: 2px solid #00000090;
         border-top-left-radius: $radius;
         border-top-right-radius: $radius;
