@@ -9,8 +9,8 @@
                     <div class="report__label">Комментарий</div>
                 </div>
                 <div class="report__input-body">
-                    <input class="report__input" v-model="comment" placeholder="Введите комментарий" type="text"
-                        name="comment" id="comment">
+                    <input class="report__input" v-model="localStore.comment" placeholder="Введите комментарий"
+                        type="text" name="comment" id="comment">
                     <div class="report__cross" @click="comment = ''">
                         <div></div>
                     </div>
@@ -87,21 +87,19 @@
 </template>
 
 <script setup>
-import { router } from 'json-server';
+import router from '../router';
 import { useVariantStore } from '../stores/variantStore';
 import { ref } from 'vue';
-
+// ======================== Переменные ========================
 const localStore = useVariantStore()
 
-const comment = ref("")
 const isListOpened = ref(false)
 // ======================== Функции ========================
-// Выбор элемента для добавления в отчет
 const uncheckItem = (item) => {
     localStore.toggleVariant(item)
 }
 const downloadReport = () => {
-    window.print()
+    router.push({ name: 'download' })
 }
 </script>
 
@@ -245,6 +243,10 @@ const downloadReport = () => {
         align-items: flex-start;
         position: relative;
 
+        &:first-child {
+            margin: $padding;
+        }
+
         .report__cross {
             top: calc(50% - 7.5px);
             left: 0;
@@ -306,5 +308,22 @@ const downloadReport = () => {
 
 .rotate {
     transform: rotate(180deg) translateY(3px);
+}
+
+@media screen and (max-width: 1200px) {
+    .report {
+        font-size: 10px;
+    }
+
+    .item__external-sources {
+        width: 50px;
+        flex-wrap: wrap;
+    }
+
+    .item__source {
+        flex-wrap: wrap;
+        font-size: 8px;
+        margin: 2px;
+    }
 }
 </style>

@@ -58,7 +58,6 @@ import { useVariantStore } from '../stores/variantStore';
 import { getVariants } from '../api/variants';
 import { onMounted, ref, computed } from 'vue';
 // ======================== Переменные ========================
-// Переменные для данных полученных по api и store
 const localStore = useVariantStore()
 const variantsData = ref([])
 
@@ -68,13 +67,11 @@ const hgvsFilters = ref([])
 const genotypeFilters = ref([])
 const significanceFilters = ref([])
 
-// Переменные UI
 const currentVariant = ref({})
 const pageEnd = ref(30)
 const isOpenedPopUp = ref(false)
 
 // ======================== Функции ========================
-// Выбор элемента для добавления в отчет или удаления из него
 const checkItem = (item) => {
   localStore.toggleVariant(item)
 }
@@ -96,8 +93,6 @@ const loadOnScroll = (e) => {
     pageEnd.value = Math.min(filtredData.value.length, pageEnd.value + 30)
   }
 }
-
-// Принимает новое значение фильтров по emit
 const addFilter = (params, newParam) => {
   if (newParam != null || newParam != {}) {
     if (params.length != 0) {
@@ -110,7 +105,6 @@ const addFilter = (params, newParam) => {
   }
   console.log(params)
 }
-// Принимает значение фильтра для удаления по emit
 const deleteFilter = (params, ParamToDelete) => {
   if (ParamToDelete != null || ParamToDelete != {}) {
     if (params.length != 0) {
@@ -119,17 +113,18 @@ const deleteFilter = (params, ParamToDelete) => {
       })
     }
   }
-  console.log(params)
 }
 
 // ======================== Вычисляемые значения ========================
 const filtredData = computed(() => {
+  // Проверка выбран ли хотя бы 1 фильтр
   if (alleleNameFilters.value.length == 0
     && hgvsFilters.value.length == 0
     && significanceFilters.value.length == 0
     && genotypeFilters.value.length == 0) return variantsData.value
   else {
     let newData = variantsData.value.filter((el) => {
+      // Проверка на совпадение хотя бы 1 элемента из каждой категории
       let checkResults = []
       if (hgvsFilters.value.length > 0) {
         let isPassed = false

@@ -1,27 +1,36 @@
 <template>
-  <div class="variants">
-    <div class="variants__toolbar">
+  <div class="others">
+    <div class="others__toolbar">
 
     </div>
-    <div class="variants__main-window">
-      Others
+    <div class="others__main-window">
+      <div>
+        Others
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { useVariantStore } from '../stores/variantStore';
-
-const storeData = useVariantStore()
 </script>
 
 <style lang="scss" scoped>
-.variants {
+.others {
   &__toolbar {
     border-top-right-radius: $radius;
     border-top-left-radius: $radius;
     height: 70px;
     background-color: $backgroundPrimaryColor;
+  }
+
+  &__main-window {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
   }
 }
 </style>

@@ -2,8 +2,9 @@ import { defineStore } from "pinia"
 import { computed, reactive, ref } from "vue"
 
 export const useVariantStore = defineStore('variant', () => {
-    // Выбранные для отчета варианты
+    // Выбранные для отчета варианты и комментарий
     const checkedVariants = ref([])
+    const comment = ref("")
 
     // Проверка, выбран ли вариант
     const isChecked = (variant) => {
@@ -17,5 +18,5 @@ export const useVariantStore = defineStore('variant', () => {
         else checkedVariants.value.splice(checkedVariants.value.indexOf(variant), 1)
     }
 
-    return { checkedVariants, isChecked, toggleVariant }
+    return { comment, checkedVariants, isChecked, toggleVariant }
 })

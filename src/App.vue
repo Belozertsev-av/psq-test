@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <div class="wrapper" id="wrapper">
     <header>
       <ps-header></ps-header>
     </header>
