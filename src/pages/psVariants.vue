@@ -40,8 +40,11 @@
           </div>
         </div>
       </div>
-      <ps-popup class="variants__main-popup" :item="currentVariant" v-if="isOpenedPopUp">
-      </ps-popup>
+      <Transition>
+        <ps-popup class="variants__main-popup" :item="currentVariant" v-if="isOpenedPopUp"
+          @close-popup="isOpenedPopUp = !isOpenedPopUp; currentVariant = {}">
+        </ps-popup>
+      </Transition>
     </div>
   </div>
 </template>
@@ -67,11 +70,11 @@ const significanceFilters = ref([])
 
 // Переменные UI
 const currentVariant = ref({})
-const pageEnd = ref(20)
+const pageEnd = ref(30)
 const isOpenedPopUp = ref(false)
 
 // ======================== Функции ========================
-// Выбор элемента для добавления в отчет
+// Выбор элемента для добавления в отчет или удаления из него
 const checkItem = (item) => {
   localStore.toggleVariant(item)
 }
@@ -90,7 +93,7 @@ const openPopUp = (variant) => {
 // Подгрузка элементов при скролле
 const loadOnScroll = (e) => {
   if (e.target.offsetHeight + e.target.scrollTop >= e.target.scrollHeight - 50) {
-    pageEnd.value = Math.min(filtredData.value.length, pageEnd.value + 20)
+    pageEnd.value = Math.min(filtredData.value.length, pageEnd.value + 30)
   }
 }
 
@@ -161,7 +164,7 @@ const filtredData = computed(() => {
       if (!checkResults.includes(false)) return el
       checkResults = []
     })
-    pageEnd.value = 20
+    pageEnd.value = 30
     return newData
   }
 })
@@ -203,15 +206,16 @@ onMounted(() => {
   &__body {
     display: grid;
     grid-template-columns: 1fr;
-
+    position: relative;
   }
 
   &__main-window {}
 
   &__main-window-body {
+    transition: all 0.1s ease;
     display: flex;
     flex-direction: column;
-    height: calc(96% - 28.4px);
+    height: calc(97% - 28px);
     overflow-y: auto;
     scrollbar-width: 10px;
     scrollbar-color: $backgroundSecondaryColor;
@@ -231,10 +235,14 @@ onMounted(() => {
   }
 
   &__main-popup {
-    opacity: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    background-color: #fff;
     box-shadow: 0 0 3px $shadowColor;
     overflow-y: auto;
-    max-height: 79svh;
+    height: 100%;
+    width: 45%;
     transition: opacity 0.2s ease;
     scrollbar-width: 0;
 
@@ -246,6 +254,7 @@ onMounted(() => {
   &__legends {
     display: grid;
     grid-template-columns: 2fr 4fr 5fr 5fr 9fr 5fr;
+    height: 28px;
     align-items: center;
     background-color: $backgroundSecondaryColor;
   }
@@ -305,16 +314,9 @@ onMounted(() => {
 }
 
 .opened {
-  display: grid;
-  grid-template-columns: 6.5fr 3.5fr;
-
-  .variants__legends {
-    grid-template-columns: 2fr 4fr 7fr 4fr 8fr 3fr;
-  }
-
   .variants__main-popup {
-    opacity: 1;
-
+    right: 0;
+    top: 0;
   }
 }
 
@@ -326,6 +328,16 @@ onMounted(() => {
 
 .external {
   text-align: left;
+}
+
+.v-enter-active,
+.v-leave-active {
+  transition: all 0.2s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
 }
 
 @media screen and (max-width: 1100px) {
@@ -340,6 +352,10 @@ onMounted(() => {
     .variants__legends {
       grid-template-columns: 2fr 3fr 7fr 5fr 7fr 5fr;
     }
+
+    .variants__main-popup {
+      top: 50%;
+    }
   }
 
   .variants {
@@ -348,9 +364,11 @@ onMounted(() => {
     }
 
     &__main-popup {
+      top: 50%;
       background-color: #fff;
       z-index: 4;
       height: calc(79svh / 2);
+      width: 100%;
     }
   }
 }

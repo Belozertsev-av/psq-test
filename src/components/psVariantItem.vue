@@ -151,14 +151,6 @@ const aliasColor = (link) => {
     word-wrap: break-word;
 }
 
-.opened {
-    .item {
-        &__body {
-            grid-template-columns: 4fr 7fr 5fr 2fr 3fr 2fr 3fr;
-        }
-    }
-}
-
 @media screen and (max-width: 1100px) {
     .opened {
         .item {

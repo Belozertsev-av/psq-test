@@ -5,6 +5,9 @@
                 <div class="popup__title title">{{ item.alleleName }}</div>
                 <ps-significance-indicator class="popup__significance"
                     :significance="item.significance"></ps-significance-indicator>
+                <button class="popup__cross" @click="emits('closePopup')">
+                    <div></div>
+                </button>
             </div>
             <div class="popup__hgvs">
                 <div class="hgvs__top">
@@ -63,7 +66,8 @@
 
 <script setup>
 import psSignificanceIndicator from './psSignificanceIndicator.vue';
-// ======================== Props ========================
+// ======================== Props, Emits ========================
+const emits = defineEmits(['closePopup'])
 const props = defineProps({
     item: {
         type: Object,
@@ -104,18 +108,25 @@ const props = defineProps({
 <style lang="scss" scoped>
 .popup {
     &__body {
-
         display: flex;
         flex-direction: column;
         align-items: center;
     }
 
     &__title {
+        margin: 0 auto;
         margin-right: $padding;
+    }
+
+    &__significance {
+        margin: 0 auto;
+        margin-left: $padding;
     }
 
     &__topside {
         display: flex;
+        align-items: center;
+        width: 100%;
         padding: $padding;
     }
 
@@ -165,19 +176,35 @@ const props = defineProps({
         align-items: center;
         padding: calc($padding/2) $padding;
     }
-}
 
-.el {
+    &__cross {
+        margin-right: $paddingMedium;
+        width: 15px;
+        height: 15px;
+        position: relative;
+        background: none;
 
-    &__id {}
+        div {
+            background-color: $headerColor;
+            width: 2px;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: calc(50% - 2px);
+            transform: rotate(45deg);
 
-    &__significance {}
-
-    &__name {}
-
-    &__version {}
-
-    &__category {}
+            &::before {
+                content: "";
+                background-color: $headerColor;
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 2px;
+                height: 100%;
+                transform: rotate(-90deg);
+            }
+        }
+    }
 }
 
 .unactive {

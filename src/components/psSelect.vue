@@ -3,7 +3,7 @@
         <label class="select__label-top">{{ props.type }}</label>
         <button class="select__button" @click="isActive = !isActive">
             <span class="select__value">{{ labelToDisplay }}</span>
-            <span class="select__arrow"></span>
+            <span class="select__arrow" :class="{ rotate: isActive }"></span>
         </button>
         <ul class="select__dropdown" :class="{ active: isActive }">
             <li class="select__li" v-for=" value  in  props.values " :key="props.values.indexOf(value)"
@@ -86,7 +86,8 @@ const labelToDisplay = computed(() => {
     }
 
     &__arrow {
-        margin-top: 2.5px;
+        transition: 0.2s;
+        margin-top: 3px;
         border: 5px solid transparent;
         border-top: 5px solid #00000090;
     }
@@ -148,5 +149,9 @@ const labelToDisplay = computed(() => {
     margin-top: 0;
     pointer-events: all;
 
+}
+
+.rotate {
+    transform: rotate(180deg) translateY(3px);
 }
 </style>
