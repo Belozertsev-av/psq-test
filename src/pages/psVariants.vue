@@ -182,11 +182,12 @@ onMounted(() => {
   height: 100%;
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 1fr 9fr;
+  grid-template-rows: max-content 9fr;
 
   &__toolbar {
     border-top-right-radius: $radius;
     width: 100%;
+    height: fit-content;
     display: flex;
     background-color: $backgroundPrimaryColor;
     @include adaptive-value('padding', 16, 4, 0);

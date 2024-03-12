@@ -107,7 +107,7 @@ const downloadReport = () => {
 .report {
     height: 100%;
     display: grid;
-    grid-template-rows: 1fr 10fr;
+    grid-template-rows: max-content 10fr;
 
     &__arrow {
         cursor: pointer;
@@ -128,6 +128,7 @@ const downloadReport = () => {
         border-top-right-radius: $radius;
         border-top-left-radius: $radius;
         width: 100%;
+        height: fit-content;
         display: flex;
         flex-direction: row-reverse;
         background-color: $backgroundPrimaryColor;
