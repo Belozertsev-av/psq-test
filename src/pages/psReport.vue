@@ -11,7 +11,7 @@
                 <div class="report__input-body">
                     <input class="report__input" v-model="localStore.comment" placeholder="Введите комментарий"
                         type="text" name="comment" id="comment">
-                    <div class="report__cross" @click="comment = ''">
+                    <div class="report__cross" @click="localStore.comment = ''">
                         <div></div>
                     </div>
                 </div>
