@@ -223,11 +223,15 @@ const downloadReport = () => {
 
     &__item {
         transition: all 0.2s;
-        display: flex;
-        justify-content: space-around;
+        display: grid;
+        grid-template-columns: 1fr 5fr 4fr 4fr 4fr 5fr 2fr 4fr 3fr;
         margin: $padding;
         border-radius: $radius;
         background-color: #EEEEEE60;
+    }
+
+    &__others {
+        margin-bottom: 50px;
     }
 }
 
@@ -267,19 +271,19 @@ const downloadReport = () => {
     }
 
     &__left-cord {
-        align-self: center;
+        padding: calc($padding/2);
     }
 
     &__right-cord {
-        align-self: center;
+        padding: calc($padding/2);
     }
 
     &__genotype {
-        align-self: center;
+        padding: calc($padding/2);
     }
 
     &__left-anchor-contig {
-        align-self: center;
+        padding: calc($padding/2);
     }
 
     &__allele-sequence {
