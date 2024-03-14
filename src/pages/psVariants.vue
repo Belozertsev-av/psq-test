@@ -18,7 +18,16 @@
       </div>
     </div>
     <div class="variants__body" :class="{ opened: isOpenedPopUp }">
-      <div class="variants__main-window">
+      <div class="variants__main-window error" v-if="variantsData.length == 0">
+        <div class="error__body">
+          <div class="error__code title">Ошибка {{ errorBody.code }}</div>
+          <div class="error__message subtitle">{{ errorBody.message }}</div>
+          <div class="error__suggetion">Проверьте подключение к интернету и попробуйте обновить страницу, если ошибка
+            сохранилась свяжитесь со службой технической поддержки</div>
+          <button class="error__btn btn">Сообщить об ошибки</button>
+        </div>
+      </div>
+      <div class="variants__main-window" v-else>
         <div class="variants__legends">
           <div class="variants__column">Выбор</div>
           <div class="variants__column">Имя</div>
@@ -60,6 +69,7 @@ import { onMounted, ref, computed } from 'vue';
 // ======================== Переменные ========================
 const localStore = useVariantStore()
 const variantsData = ref([])
+const errorBody = ref({})
 
 // Выбранные фильтры
 const alleleNameFilters = ref([])
@@ -168,9 +178,12 @@ onMounted(() => {
   (async () => {
     await getVariants()
       .then((response) => {
+        errorBody.value = {}
         variantsData.value = response.data
+        console.log("not som")
       })
       .catch((error) => {
+        errorBody.value = error
         console.log(error)
       })
   })()
@@ -308,6 +321,36 @@ onMounted(() => {
     border-radius: $radius;
   }
 }
+
+.error {
+
+  &__body {
+    margin: 0 auto;
+    text-align: center;
+    height: 60%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__code {
+    margin: $padding;
+  }
+
+  &__message {
+    padding: calc($padding/2);
+  }
+
+  &__suggetion {
+    margin: $padding $padding $paddingGrand $padding;
+  }
+
+  &__btn {}
+}
+
+.btn {}
 
 .opened {
   .variants__main-popup {

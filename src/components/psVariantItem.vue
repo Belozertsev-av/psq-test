@@ -1,7 +1,9 @@
 <template>
     <div class="item">
         <div class="item__body">
-            <div class="item__name column">{{ variant.alleleName }}</div>
+            <div class="item__name column">{{ (variant.alleleName.length > 7) ? `${variant.alleleName.slice(0,
+                5)}...` : variant.alleleName }}
+            </div>
             <ps-significance-indicator class="item__significance column"
                 :significance="variant.significance"></ps-significance-indicator>
             <div class="item__genotype column">{{ genotype }}</div>
