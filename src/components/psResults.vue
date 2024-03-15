@@ -80,7 +80,4 @@ import psMeta from '../components/psMeta.vue';
 .v-leave-active {
     transition: all 0.2s ease;
 }
-
-.v-enter-from,
-.v-leave-to {}
 </style>

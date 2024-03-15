@@ -83,7 +83,7 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
+import { onMounted, onUnmounted } from 'vue';
 import router from '../router';
 import { useVariantStore } from '../stores/variantStore';
 import psReportItem from './psReportItem.vue';

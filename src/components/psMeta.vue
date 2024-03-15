@@ -28,15 +28,9 @@
         text-decoration: underline;
     }
 
-    &__date {}
-
     &__sample {
         font-weight: 700;
     }
-
-    &__type {}
-
-    &__cftr {}
 
     &__status {
         color: $primaryColor;

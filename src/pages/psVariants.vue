@@ -211,8 +211,6 @@ onMounted(() => {
     position: relative;
   }
 
-  &__main-window {}
-
   &__main-window-body {
     transition: all 0.1s ease;
     display: flex;

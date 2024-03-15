@@ -45,7 +45,5 @@ const props = defineProps({
     &__suggetion {
         margin: $padding $padding $paddingGrand $padding;
     }
-
-    &__btn {}
 }
 </style>
