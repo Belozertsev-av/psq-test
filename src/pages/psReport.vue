@@ -22,59 +22,63 @@
                     <div class="report__label">Генетические варианты</div>
                     <div class="report__arrow" :class="{ rotate: isListOpened }"></div>
                 </div>
-                <div class="report__items-list" v-if="isListOpened">
-                    <div class="report__item" v-for="item in localStore.checkedVariants" :key="item.alleleName">
-                        <div class="item__column">
-                            <div class="report__cross" @click="uncheckItem(item)">
-                                <div></div>
+                <TransitionGroup name="list" tag="div">
+                    <div class="report__items-list" v-if="isListOpened">
+                        <ps-report-item class="report__item" v-for="item in localStore.checkedVariants"
+                            :key="item.alleleName" :item="item" :showCross="true">
+                            <div class="item__column">
+                                <div class="report__cross" @click="uncheckItem(item)">
+                                    <div></div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="item__column">
-                            <div class="item__alleleName">Имя: <span class="item__value">{{ item.alleleName }}</span>
+                            <div class="item__column">
+                                <div class="item__alleleName">Имя: <span class="item__value">{{ item.alleleName
+                                        }}</span>
+                                </div>
+                                <div class="item__significance">Знач: <span class="item__value">{{ item.significance
+                                        }}</span>
+                                </div>
                             </div>
-                            <div class="item__significance">Знач: <span class="item__value">{{ item.significance
-                                    }}</span>
-                            </div>
-                        </div>
-                        <div class="item__column">
-                            <div class="item__hgvs">HGVS:</div>
-                            <div class="item__value">{{ item.hgvs.g }}</div>
-                            <div class="item__value">{{ item.hgvs.c }}</div>
-                            <div class="item__value">{{ item.hgvs.p }}</div>
+                            <div class="item__column">
+                                <div class="item__hgvs">HGVS:</div>
+                                <div class="item__value">{{ item.hgvs.g }}</div>
+                                <div class="item__value">{{ item.hgvs.c }}</div>
+                                <div class="item__value">{{ item.hgvs.p }}</div>
 
-                        </div>
-                        <div class="item__column">
-                            <div class="item__left-cord">Лев. коорд:</div>
-                            <div class="item__value">{{ item.leftAnchorPosition }}</div>
-                        </div>
-                        <div class="item__column">
-                            <div class="item__right-cord">Прав. коорд:</div>
-                            <div class="item__value">{{ item.rightAnchorPosition }}</div>
-                        </div>
-                        <div class="item__column">
-                            <div class="item__genotype">Генотип:</div>
-                            <div class="item__value">{{ item.genotype }}</div>
-                        </div>
-                        <div class="item__column">
-                            <div class="item__left-anchor-contig">Хромосома:</div>
-                            <div class="item__value">{{ item.leftAnchorContig }}</div>
-                        </div>
-                        <div class="item__column">
-                            <div class="item__allele-sequence">Послед. варианта:
-                                <span class="item__value">{{ item.alleleSequence }}</span>
                             </div>
-                            <div class="item__reference-sequence">Послед. в реф. геноме:
-                                <span class="item__value">{{ item.referenceSequence }}</span>
+                            <div class="item__column">
+                                <div class="item__left-cord">Лев. коорд:</div>
+                                <div class="item__value">{{ item.leftAnchorPosition }}</div>
                             </div>
-                        </div>
-                        <div class="item__column">
-                            <div class="item__external-sources">
-                                <div class="item__source" v-for="source in item.externalSourceEntries">
-                                    {{ (source.database.alias != null) ? source.database.alias : '?' }}</div>
+                            <div class="item__column">
+                                <div class="item__right-cord">Прав. коорд:</div>
+                                <div class="item__value">{{ item.rightAnchorPosition }}</div>
                             </div>
-                        </div>
+                            <div class="item__column">
+                                <div class="item__genotype">Генотип:</div>
+                                <div class="item__value">{{ item.genotype }}</div>
+                            </div>
+                            <div class="item__column">
+                                <div class="item__left-anchor-contig">Хромосома:</div>
+                                <div class="item__value">{{ item.leftAnchorContig }}</div>
+                            </div>
+                            <div class="item__column">
+                                <div class="item__allele-sequence">Послед. варианта:
+                                    <span class="item__value">{{ item.alleleSequence }}</span>
+                                </div>
+                                <div class="item__reference-sequence">Послед. в реф. геноме:
+                                    <span class="item__value">{{ item.referenceSequence }}</span>
+                                </div>
+                            </div>
+                            <div class="item__column">
+                                <div class="item__external-sources">
+                                    <div class="item__source" v-for="source in item.externalSourceEntries">
+                                        {{ (source.database.alias != null) ? source.database.alias : '?' }}</div>
+                                </div>
+                            </div>
+                        </ps-report-item>
                     </div>
-                </div>
+                </TransitionGroup>
             </div>
             <div class="report__others">
                 <div class="report__delimeter">
@@ -88,16 +92,14 @@
 
 <script setup>
 import router from '../router';
+import psReportItem from '../components/psReportItem.vue';
 import { useVariantStore } from '../stores/variantStore';
 import { ref } from 'vue';
 // ======================== Переменные ========================
 const localStore = useVariantStore()
 
-const isListOpened = ref(false)
+const isListOpened = ref(true)
 // ======================== Функции ========================
-const uncheckItem = (item) => {
-    localStore.toggleVariant(item)
-}
 const downloadReport = () => {
     router.push({ name: 'download' })
 }
@@ -221,93 +223,8 @@ const downloadReport = () => {
         flex-direction: column;
     }
 
-    &__item {
-        transition: all 0.2s;
-        display: grid;
-        grid-template-columns: 1fr 5fr 4fr 4fr 4fr 5fr 2fr 4fr 3fr;
-        margin: $padding;
-        border-radius: $radius;
-        background-color: #EEEEEE60;
-    }
-
     &__others {
         margin-bottom: 50px;
-    }
-}
-
-.item {
-    &__value {
-        font-weight: 700;
-        padding: calc($padding/2);
-    }
-
-    &__column {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: flex-start;
-        position: relative;
-
-        &:first-child {
-            margin: $padding;
-        }
-
-        .report__cross {
-            top: calc(50% - 7.5px);
-            left: 0;
-        }
-    }
-
-    &__alleleName {
-        padding: calc($padding/2);
-    }
-
-    &__significance {
-        padding: calc($padding/2);
-    }
-
-    &__hgvs {
-        padding: calc($padding/2);
-    }
-
-    &__left-cord {
-        padding: calc($padding/2);
-    }
-
-    &__right-cord {
-        padding: calc($padding/2);
-    }
-
-    &__genotype {
-        padding: calc($padding/2);
-    }
-
-    &__left-anchor-contig {
-        padding: calc($padding/2);
-    }
-
-    &__allele-sequence {
-        padding: calc($padding/2);
-    }
-
-    &__reference-sequence {
-        padding: calc($padding/2);
-    }
-
-    &__external-sources {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex: 1 1 auto;
-    }
-
-    &__source {
-        background-color: $primaryColor;
-        border-radius: $radius;
-        font-size: 8px;
-        color: #fff;
-        margin: calc($padding/2);
-        padding: calc($padding/2);
     }
 }
 
@@ -315,20 +232,20 @@ const downloadReport = () => {
     transform: rotate(180deg) translateY(3px);
 }
 
+.list-enter-active,
+.list-leave-active {
+    transition: all 0.2s ease;
+}
+
+.list-enter-from,
+.list-leave-to {
+    opacity: 0;
+    transform: translateY(-30px);
+}
+
 @media screen and (max-width: 1200px) {
     .report {
         font-size: 10px;
-    }
-
-    .item__external-sources {
-        width: 50px;
-        flex-wrap: wrap;
-    }
-
-    .item__source {
-        flex-wrap: wrap;
-        font-size: 8px;
-        margin: 2px;
     }
 }
 </style>

@@ -16,7 +16,13 @@
                         <div class="report__label">Генетические варианты</div>
                     </div>
                     <div class="report__items-list">
-                        <div class="report__item" v-for="item in localStore.checkedVariants" :key="item.alleleName">
+                        <ps-report-item class="report__item" v-for="item in localStore.checkedVariants"
+                            :key="item.alleleName" :item="item" :showCross="false">
+                            <div class="item__column">
+                                <div class="report__cross" @click="uncheckItem(item)">
+                                    <div></div>
+                                </div>
+                            </div>
                             <div class="item__column">
                                 <div class="item__alleleName">Имя: <span class="item__value">{{ item.alleleName
                                         }}</span>
@@ -59,12 +65,10 @@
                             <div class="item__column">
                                 <div class="item__external-sources">
                                     <div class="item__source" v-for="source in item.externalSourceEntries">
-                                        <a :href="source.link">{{ (source.database.alias != null) ?
-                            source.database.alias : '?' }}</a>
-                                    </div>
+                                        {{ (source.database.alias != null) ? source.database.alias : '?' }}</div>
                                 </div>
                             </div>
-                        </div>
+                        </ps-report-item>
                     </div>
                 </div>
                 <div class="report__others">
@@ -82,6 +86,7 @@
 import { onMounted } from 'vue';
 import router from '../router';
 import { useVariantStore } from '../stores/variantStore';
+import psReportItem from './psReportItem.vue';
 
 const localStore = useVariantStore()
 
