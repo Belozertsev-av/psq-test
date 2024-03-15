@@ -54,9 +54,7 @@
 
 <script lang="ts" setup>
 import { useVariantStore } from '../stores/variantStore';
-
-
-const localStore = useVariantStore()
+// ======================== Props, Emits ========================
 const props = defineProps({
     item: {
         type: Object,
@@ -67,7 +65,9 @@ const props = defineProps({
         required: true
     }
 })
-
+// ======================== Переменные ========================
+const localStore = useVariantStore()
+// ======================== Функции ========================
 const uncheckItem = (item) => {
     localStore.toggleVariant(item)
 }

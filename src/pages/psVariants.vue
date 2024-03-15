@@ -18,15 +18,8 @@
       </div>
     </div>
     <div class="variants__body" :class="{ opened: isOpenedPopUp }">
-      <div class="variants__main-window error" v-if="variantsData.length == 0">
-        <div class="error__body">
-          <div class="error__code title">Ошибка {{ errorBody.code }}</div>
-          <div class="error__message subtitle">{{ errorBody.message }}</div>
-          <div class="error__suggetion">Проверьте подключение к интернету и попробуйте обновить страницу, если ошибка
-            сохранилась свяжитесь со службой технической поддержки</div>
-          <button class="error__btn btn">Сообщить об ошибки</button>
-        </div>
-      </div>
+      <ps-error class="variants__main-window error" v-if="variantsData.length == 0" :error="errorBody">
+      </ps-error>
       <div class="variants__main-window" v-else>
         <div class="variants__legends">
           <div class="variants__column">Выбор</div>
@@ -40,7 +33,8 @@
           <div class="variants__items-list">
             <div class="variants__item" v-for="item in filtredData.slice(0, pageEnd) " :key="item.alleleName">
               <div class="variants__check" @click="checkItem(item)">
-                <input class="variants__input" type="checkbox" name="report" :id="item.alleleName">
+                <input class="variants__input" type="checkbox" name="report" :checked="localStore.isChecked(item)"
+                  :id="item.alleleName">
                 <div class="variants__checkmark"></div>
               </div>
               <ps-variant-item :variant="item" @click="openPopUp(item)" :class="{ selected: currentVariant === item }">
@@ -63,6 +57,7 @@ import psVariantItem from '../components/psVariantItem.vue';
 import psPopup from '../components/psPopup.vue';
 import psSelect from '../components/psSelect.vue';
 import psInput from '../components/psInput.vue';
+import psError from '../components/psError.vue';
 import { useVariantStore } from '../stores/variantStore';
 import { getVariants } from '../api/variants';
 import { onMounted, ref, computed } from 'vue';
@@ -180,11 +175,9 @@ onMounted(() => {
       .then((response) => {
         errorBody.value = {}
         variantsData.value = response.data
-        console.log("not som")
       })
       .catch((error) => {
         errorBody.value = error
-        console.log(error)
       })
   })()
 })
@@ -321,36 +314,6 @@ onMounted(() => {
     border-radius: $radius;
   }
 }
-
-.error {
-
-  &__body {
-    margin: 0 auto;
-    text-align: center;
-    height: 60%;
-    max-width: 600px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-
-  &__code {
-    margin: $padding;
-  }
-
-  &__message {
-    padding: calc($padding/2);
-  }
-
-  &__suggetion {
-    margin: $padding $padding $paddingGrand $padding;
-  }
-
-  &__btn {}
-}
-
-.btn {}
 
 .opened {
   .variants__main-popup {
