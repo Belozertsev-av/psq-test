@@ -159,11 +159,18 @@ const downloadReport = () => {
     }
 
     &__input {
+        transition: 0.2s ease;
         box-shadow: 0 0 4px $shadowColor;
         padding: $padding $paddingGrand $padding $paddingMedium;
         @include adaptive-value('width', 500, 300, 0);
-        border-radius: $radius;
+        border-top-left-radius: $radius;
+        border-top-right-radius: $radius;
+        border-bottom: 2px solid $headerColor;
         margin: $padding;
+
+        &:focus {
+            background-color: $secondaryColor;
+        }
     }
 
     &__cross {
