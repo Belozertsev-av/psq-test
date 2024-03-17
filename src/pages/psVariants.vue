@@ -59,7 +59,7 @@ import psSelect from '../components/psSelect.vue';
 import psInput from '../components/psInput.vue';
 import psError from '../components/psError.vue';
 import { useVariantStore } from '../stores/variantStore';
-import { getVariants } from '../api/variants';
+import { getVariants } from '../../api/variants';
 import { onMounted, ref, computed } from 'vue';
 // ======================== Переменные ========================
 const localStore = useVariantStore()
