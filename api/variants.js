@@ -1,8 +1,6 @@
-import axios from "axios";
-
-const API_URL = "https://psq-test.vercel.app/api"
+import { db } from "./db";
 
 // Имитация GET запроса
-export function getVariants() {
-    return axios.get(`${API_URL}/variants`)
+export async function getVariants() {
+    return db
 }

@@ -1,5 +1,4 @@
-{
-  "variants": [
+export const db = [
     {
       "alleleName": "M1V",
       "hgvs": {
@@ -40575,4 +40574,3 @@
       "significance": "UNCERTAIN"
     }
   ]
-}

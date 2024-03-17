@@ -174,7 +174,7 @@ onMounted(() => {
     await getVariants()
       .then((response) => {
         errorBody.value = {}
-        variantsData.value = response.data
+        variantsData.value = response
       })
       .catch((error) => {
         errorBody.value = error
