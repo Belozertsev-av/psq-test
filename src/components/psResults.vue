@@ -75,9 +75,4 @@ import psMeta from '../components/psMeta.vue';
     font-weight: 700;
     text-decoration: none;
 }
-
-.v-enter-active,
-.v-leave-active {
-    transition: all 0.2s ease;
-}
 </style>
